@@ -1,0 +1,9 @@
+{
+  "name": "dialect-archive-map-tools",
+  "private": true,
+  "description": "Boundary data used by build_map.py to generate data/map.js",
+  "devDependencies": {
+    "cn-atlas": "0.1.2",
+    "taiwan-atlas": "2021.9.20"
+  }
+}

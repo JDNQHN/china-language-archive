@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dialect Archive — Language map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=Noto+Sans+SC:wght@500&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark" lang="zh-Hans">言</span>
+      <span class="brand-text">
+        <span class="brand-name">Dialect Archive</span>
+        <span class="brand-zh" lang="zh-Hans">方言档案</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#map" aria-current="page">Map</a>
+      <a href="#languages">Languages</a>
+      <a href="#about">About</a>
+      <a class="btn btn-dark" href="#contribute">Contribute a recording</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top" class="wrap main">
+  <section class="intro">
+    <p class="eyebrow">Preserving China’s non-Mandarin languages</p>
+    <h1>Hear every voice of China.</h1>
+    <p class="lede">Choose a language area on the map to explore where it’s spoken, its local varieties and recordings from native speakers.</p>
+  </section>
+
+  <section id="map" class="map-layout" aria-label="Language map">
+    <div class="card map-card">
+      <div class="card-head">
+        <h2>Language areas</h2>
+        <p class="muted small">Boundaries are approximate</p>
+      </div>
+
+      <div class="chip-groups">
+        <div role="group" aria-labelledby="grp-chinese">
+          <h3 id="grp-chinese" class="label">Chinese languages</h3>
+          <div class="chips" data-group="chinese"></div>
+        </div>
+        <div role="group" aria-labelledby="grp-other">
+          <h3 id="grp-other" class="label">Other languages of China &amp; Taiwan</h3>
+          <div class="chips" data-group="other"></div>
+        </div>
+      </div>
+
+      <div class="map-frame" id="map-frame">
+        <svg id="china-map" role="group" aria-label="Map of China showing language areas"></svg>
+
+        <div class="map-key" aria-hidden="true">
+          <span class="swatch swatch-bg"></span>Mandarin, or not yet mapped
+        </div>
+
+        <div class="tooltip" id="tooltip" role="tooltip" hidden>
+          <span class="tt-name"></span>
+          <span class="tt-zh" lang="zh-Hans"></span>
+          <span class="tt-family"></span>
+        </div>
+
+      </div>
+
+      <p class="muted small">Not yet on the map: Pinghua, Shaozhou Tuhua, Waxiang, Dong, Tujia, Qiang, Wa, Salar, Manchu and many more.</p>
+    </div>
+
+    <aside class="card detail" id="detail" aria-label="Language details" aria-live="polite"></aside>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner muted small">
+    <span>Dialect Archive — a community project. Language areas are simplified to prefecture level; most areas are multilingual.</span>
+    <span>Boundaries: <a href="https://github.com/ruiduobao/shengshixian.com">shengshixian.com</a> via cn-atlas · <a href="https://github.com/dkaoster/taiwan-atlas">taiwan-atlas</a></span>
+  </div>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
