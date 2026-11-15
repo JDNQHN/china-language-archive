@@ -2,7 +2,7 @@
 
 An interactive map for archiving and preserving China’s non-Mandarin languages — Chinese groups such as Yue, Min, Hakka and Wu, and other languages of China and Taiwan such as Tibetan, Uyghur, Zhuang and the Formosan languages.
 
-Click a language area (or a language button) to see where it’s spoken, its main varieties, and — eventually — recordings from native speakers. Taiwan is shown in an inset box in the corner of the map, which lights up when a language spoken there is selected.
+The map fills the page. Hover over an area to see which language is spoken there, click it to highlight it, or open the **Languages** menu to pick from the full list and see the legend. Taiwan is shown in an inset box in the corner of the map, which lights up when a language spoken there is selected.
 
 ## Running it locally
 
@@ -20,11 +20,16 @@ Any static host (GitHub Pages, Netlify, etc.) will serve it as is.
 ```
 index.html          Page structure
 css/styles.css      All styling
-js/app.js           Map, language buttons, tooltip, detail panel, Taiwan inset
+js/app.js           Map, languages menu, tooltip, detail panel, Taiwan inset
+js/config.js        Feature switches (e.g. turn the language detail panel on/off)
 data/languages.js   Language info: names, family, description, varieties, colour, Taiwan notes
 data/map.js         Map geometry (generated — see below)
 tools/              Script and data used to regenerate data/map.js
 ```
+
+### Feature switches
+
+`js/config.js` turns parts of the page on or off. `detailPanel` controls the side panel with each language’s description, varieties and recordings; it’s off for now, but the markup, styles and code are kept, so setting it to `true` brings it back.
 
 ### Editing languages
 

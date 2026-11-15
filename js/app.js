@@ -1,5 +1,6 @@
 import { LANGUAGES } from '../data/languages.js';
 import { MAP } from '../data/map.js';
+import { FEATURES } from './config.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const byId = Object.fromEntries(LANGUAGES.map((l) => [l.id, l]));
@@ -15,6 +16,13 @@ const els = {
   map: document.getElementById('china-map'),
   tooltip: document.getElementById('tooltip'),
   detail: document.getElementById('detail'),
+  legendToggle: document.getElementById('legend-toggle'),
+  legendPanel: document.getElementById('legend-panel'),
+  legendClose: document.getElementById('legend-close'),
+  current: document.getElementById('legend-current'),
+  currentSwatch: document.getElementById('legend-current-swatch'),
+  currentName: document.getElementById('legend-current-name'),
+  currentClear: document.getElementById('legend-clear'),
 };
 
 const zoneEls = {}; // language id -> [path, ...] (a language can have mainland and Taiwan shapes)
@@ -68,7 +76,9 @@ function buildMap() {
   buildTaiwanInset();
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && state.selected) { state.selected = null; render(); }
+    if (e.key !== 'Escape') return;
+    if (!els.legendPanel.hidden) { setLegendOpen(false); els.legendToggle.focus(); }
+    else if (state.selected) { state.selected = null; render(); }
   });
 }
 
@@ -119,6 +129,26 @@ function buildTaiwanInset() {
   }
   twInset.append(inner);
   els.map.append(twInset);
+}
+
+/* ---------- languages menu (legend) ---------- */
+
+function setLegendOpen(open) {
+  els.legendPanel.hidden = !open;
+  els.legendToggle.setAttribute('aria-expanded', String(open));
+  if (open) hideTooltip();
+}
+
+function buildLegend() {
+  els.legendToggle.addEventListener('click', () => setLegendOpen(els.legendPanel.hidden));
+  els.legendClose.addEventListener('click', () => { setLegendOpen(false); els.legendToggle.focus(); });
+  els.currentClear.addEventListener('click', () => { state.selected = null; render(); });
+  // Close when clicking anywhere outside the menu (clicks on the map still select areas).
+  document.addEventListener('pointerdown', (e) => {
+    if (els.legendPanel.hidden) return;
+    if (els.legendPanel.contains(e.target) || els.legendToggle.contains(e.target)) return;
+    setLegendOpen(false);
+  });
 }
 
 /* ---------- tooltip ---------- */
@@ -213,9 +243,16 @@ function render() {
     chip.setAttribute('aria-pressed', String(sel === id));
   }
   const lang = sel ? byId[sel] : null;
-  renderDetail(lang);
+  els.current.hidden = !lang;
+  if (lang) {
+    els.currentSwatch.style.background = lang.color;
+    els.currentName.textContent = lang.name;
+  }
+  if (FEATURES.detailPanel) renderDetail(lang);
 }
 
+els.detail.hidden = !FEATURES.detailPanel;
 buildChips();
+buildLegend();
 buildMap();
 render();
