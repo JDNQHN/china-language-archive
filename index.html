@@ -28,50 +28,59 @@
   </div>
 </header>
 
-<main id="top" class="wrap main">
-  <section class="intro">
-    <p class="eyebrow">Preserving China’s non-Mandarin languages</p>
-    <h1>Hear every voice of China.</h1>
-    <p class="lede">Choose a language area on the map to explore where it’s spoken, its local varieties and recordings from native speakers.</p>
-  </section>
+<main id="top" class="main">
+  <section id="map" class="map-stage" aria-label="Language map">
+    <div class="map-frame" id="map-frame">
+      <svg id="china-map" role="group" aria-label="Map of China showing language areas"></svg>
 
-  <section id="map" class="map-layout" aria-label="Language map">
-    <div class="card map-card">
-      <div class="card-head">
-        <h2>Language areas</h2>
-        <p class="muted small">Boundaries are approximate</p>
+      <div class="map-controls">
+        <div class="legend-bar">
+          <button type="button" class="legend-btn" id="legend-toggle" aria-expanded="false" aria-controls="legend-panel">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            <span>Languages</span>
+          </button>
+          <span class="legend-current" id="legend-current" hidden>
+            <span class="swatch" id="legend-current-swatch" aria-hidden="true"></span>
+            <span id="legend-current-name"></span>
+            <button type="button" class="legend-clear" id="legend-clear" aria-label="Clear selection">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </span>
+        </div>
+
+        <div class="legend-panel" id="legend-panel" role="dialog" aria-labelledby="legend-title" hidden>
+          <div class="legend-head">
+            <h2 id="legend-title">Languages</h2>
+            <button type="button" class="icon-btn" id="legend-close" aria-label="Close languages menu">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <div class="chip-groups">
+            <div role="group" aria-labelledby="grp-chinese">
+              <h3 id="grp-chinese" class="label">Chinese languages</h3>
+              <div class="chips" data-group="chinese"></div>
+            </div>
+            <div role="group" aria-labelledby="grp-other">
+              <h3 id="grp-other" class="label">Other languages of China &amp; Taiwan</h3>
+              <div class="chips" data-group="other"></div>
+            </div>
+          </div>
+          <div class="legend-foot">
+            <p class="map-key"><span class="swatch swatch-bg" aria-hidden="true"></span>Mandarin, or not yet mapped</p>
+            <p class="muted xsmall">Boundaries are approximate. Not yet on the map: Pinghua, Shaozhou Tuhua, Waxiang, Dong, Tujia, Qiang, Wa, Salar, Manchu and many more.</p>
+          </div>
+        </div>
       </div>
 
-      <div class="chip-groups">
-        <div role="group" aria-labelledby="grp-chinese">
-          <h3 id="grp-chinese" class="label">Chinese languages</h3>
-          <div class="chips" data-group="chinese"></div>
-        </div>
-        <div role="group" aria-labelledby="grp-other">
-          <h3 id="grp-other" class="label">Other languages of China &amp; Taiwan</h3>
-          <div class="chips" data-group="other"></div>
-        </div>
+      <div class="tooltip" id="tooltip" role="tooltip" hidden>
+        <span class="tt-name"></span>
+        <span class="tt-zh" lang="zh-Hans"></span>
+        <span class="tt-family"></span>
       </div>
-
-      <div class="map-frame" id="map-frame">
-        <svg id="china-map" role="group" aria-label="Map of China showing language areas"></svg>
-
-        <div class="map-key" aria-hidden="true">
-          <span class="swatch swatch-bg"></span>Mandarin, or not yet mapped
-        </div>
-
-        <div class="tooltip" id="tooltip" role="tooltip" hidden>
-          <span class="tt-name"></span>
-          <span class="tt-zh" lang="zh-Hans"></span>
-          <span class="tt-family"></span>
-        </div>
-
-      </div>
-
-      <p class="muted small">Not yet on the map: Pinghua, Shaozhou Tuhua, Waxiang, Dong, Tujia, Qiang, Wa, Salar, Manchu and many more.</p>
     </div>
 
-    <aside class="card detail" id="detail" aria-label="Language details" aria-live="polite"></aside>
+    <!-- Language detail panel. Turned off for now: set FEATURES.detailPanel = true in js/config.js to bring it back. -->
+    <aside class="card detail" id="detail" aria-label="Language details" aria-live="polite" hidden></aside>
   </section>
 </main>
 
