@@ -14,7 +14,7 @@ const TAIWAN_LANGS = new Set(Object.values(TAIWAN_LAYERS));
 const els = {
   frame: document.getElementById('map-frame'),
   map: document.getElementById('china-map'),
-  tooltip: document.getElementById('tooltip'),
+  hover: document.getElementById('hover-overlay'),
   detail: document.getElementById('detail'),
   legendToggle: document.getElementById('legend-toggle'),
   legendPanel: document.getElementById('legend-panel'),
@@ -92,17 +92,15 @@ function makeZone(id, d, extraClass = '') {
   path.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(id); }
   });
-  path.addEventListener('pointermove', (e) => {
+  path.addEventListener('pointerenter', (e) => {
     if (e.pointerType === 'touch') return;
-    showTooltip(lang, e.clientX, e.clientY);
+    showHover(lang);
   });
-  path.addEventListener('pointerleave', hideTooltip);
+  path.addEventListener('pointerleave', hideHover);
   path.addEventListener('focus', () => {
-    if (!path.matches(':focus-visible')) return;
-    const r = path.getBoundingClientRect();
-    showTooltip(lang, r.left + r.width / 2, r.top + r.height / 2);
+    if (path.matches(':focus-visible')) showHover(lang);
   });
-  path.addEventListener('blur', hideTooltip);
+  path.addEventListener('blur', hideHover);
   (zoneEls[id] ||= []).push(path);
   return path;
 }
@@ -136,7 +134,7 @@ function buildTaiwanInset() {
 function setLegendOpen(open) {
   els.legendPanel.hidden = !open;
   els.legendToggle.setAttribute('aria-expanded', String(open));
-  if (open) hideTooltip();
+  if (open) hideHover();
 }
 
 function buildLegend() {
@@ -151,33 +149,19 @@ function buildLegend() {
   });
 }
 
-/* ---------- tooltip ---------- */
+/* ---------- hover overlay ---------- */
 
-function showTooltip(lang, clientX, clientY) {
-  const tt = els.tooltip;
-  tt.querySelector('.tt-name').textContent = lang.name;
-  tt.querySelector('.tt-zh').textContent = `${lang.zh} · ${lang.pinyin}`;
-  tt.querySelector('.tt-family').textContent = lang.family;
-  tt.hidden = false;
-
-  const frame = els.frame.getBoundingClientRect();
-  const x = clientX - frame.left;
-  const y = clientY - frame.top;
-  const w = tt.offsetWidth;
-  const h = tt.offsetHeight;
-  const gap = 14;
-  // Prefer above-right of the cursor; flip when it would leave the map.
-  let left = x + gap;
-  let top = y - h - gap;
-  if (left + w > frame.width - 8) left = x - w - gap;
-  if (top < 8) top = y + gap;
-  left = Math.max(8, Math.min(left, frame.width - w - 8));
-  top = Math.max(8, Math.min(top, frame.height - h - 8));
-  tt.style.setProperty('--tx', `${left}px`);
-  tt.style.setProperty('--ty', `${top}px`);
+// Big language name shown over the map while an area is hovered (or keyboard-focused).
+function showHover(lang) {
+  const h = els.hover;
+  h.querySelector('.ho-name').textContent = lang.name;
+  h.querySelector('.ho-zh').textContent = `${lang.zh} · ${lang.pinyin}`;
+  h.querySelector('.ho-family').textContent = lang.family;
+  h.style.setProperty('--lang', lang.color);
+  h.classList.add('show');
 }
 
-function hideTooltip() { els.tooltip.hidden = true; }
+function hideHover() { els.hover.classList.remove('show'); }
 
 /* ---------- render ---------- */
 
@@ -185,15 +169,8 @@ function renderDetail(lang) {
   const d = els.detail;
   d.replaceChildren();
 
-  if (!lang) {
-    d.append(el('div', { class: 'detail-empty' },
-      el('h2', { class: 'panel-title', text: 'Choose a language' }),
-      el('p', { class: 'muted', style: 'font-size:15px;line-height:1.55', text: 'Click an area on the map, or pick a language above, to see where it’s spoken, its main varieties and recordings from the archive.' }),
-      el('div', { class: 'dashed' },
-        el('span', { class: 'label', style: 'color:var(--accent)', text: 'Nothing selected' }),
-        el('span', { class: 'muted', style: 'font-size:14px', text: 'Language details will appear here.' }))));
-    return;
-  }
+  d.hidden = !lang;
+  if (!lang) return;
 
   const closeIcon = svgEl('svg', { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'aria-hidden': 'true' });
   closeIcon.append(svgEl('path', { d: 'M6 6l12 12M18 6L6 18' }));
@@ -248,10 +225,15 @@ function render() {
     els.currentSwatch.style.background = lang.color;
     els.currentName.textContent = lang.name;
   }
-  if (FEATURES.detailPanel) renderDetail(lang);
+  if (FEATURES.detailPanel) {
+    const opening = lang && els.detail.hidden;
+    renderDetail(lang);
+    if (opening) { els.detail.classList.remove('enter'); void els.detail.offsetWidth; els.detail.classList.add('enter'); }
+    else if (lang) els.detail.scrollTop = 0;
+  }
 }
 
-els.detail.hidden = !FEATURES.detailPanel;
+els.detail.hidden = true;
 buildChips();
 buildLegend();
 buildMap();
