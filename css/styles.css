@@ -134,6 +134,17 @@ p { margin: 0; }
 .varieties li { padding: 6px 10px; border-radius: 999px; background: var(--soft); font-size: 13px; }
 .dashed .btn-dark { align-self: flex-start; margin: 0; font-size: 14px; padding: 10px 16px; min-height: 40px; }
 
+/* Text pages (about etc.): normal scrolling instead of the full-height map layout */
+body.page { height: auto; min-height: 100vh; min-height: 100dvh; }
+.page-main { display: block; padding: 48px 24px 64px; }
+.prose { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+.prose h1 { font-family: var(--display); font-weight: 600; font-size: clamp(32px, 5vw, 48px); line-height: 1.05; letter-spacing: -.02em; margin-top: -20px; }
+.prose h2 { font-family: var(--display); font-weight: 600; font-size: 22px; margin-bottom: 8px; }
+.prose p { font-size: 16px; line-height: 1.65; color: var(--ink-2); }
+.prose .lede { font-size: 19px; color: var(--ink); }
+.prose section { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.prose section .btn-dark { margin: 12px 0 0; }
+
 /* Footer */
 .site-footer { border-top: 1px solid var(--line); }
 .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-block: 12px; }
