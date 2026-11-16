@@ -1,0 +1,58 @@
+/* Language pages (language.html) */
+body.page-language { height: auto; min-height: 100vh; min-height: 100dvh; }
+.lang-main { flex: 1; padding-bottom: 48px; }
+.lang-wrap { max-width: 1120px; }
+
+.lang-hero { background: var(--surface); border-bottom: 1px solid var(--line); position: relative; }
+.lang-hero::before { content: ''; position: absolute; inset: 0 0 auto; height: 6px; background: var(--lang, var(--accent)); }
+.lang-hero-inner { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 40px; align-items: center; padding-block: 40px 44px; }
+.lang-hero-text { display: flex; flex-direction: column; gap: 12px; }
+.back-link { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 44px; margin-bottom: 8px; font-size: 15px; font-weight: 500; text-decoration: none; color: var(--muted); }
+.back-link:hover { color: var(--ink); }
+.lang-hero .family .bar { background: var(--lang); }
+.lang-title { font-family: var(--display); font-weight: 600; font-size: clamp(48px, 7vw, 88px); line-height: .95; letter-spacing: -.02em; }
+.lang-names { font-size: 20px; color: var(--muted); }
+.lang-names [lang] { font-family: var(--zh); color: var(--ink-2); }
+.lang-blurb { font-size: 18px; line-height: 1.6; color: var(--ink-2); max-width: 56ch; margin-top: 8px; }
+
+.locator-card { display: block; padding: 16px; border-radius: var(--radius); border: 1px solid var(--line); background: #F8FAF9; transition: border-color .15s, box-shadow .15s; }
+.locator-card:hover { border-color: var(--line-2); box-shadow: 0 8px 24px rgba(20,32,28,.08); }
+.locator-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.locator { display: block; width: 100%; height: auto; }
+.loc-zone { fill: var(--map-bg); stroke: #fff; stroke-width: .7; stroke-linejoin: round; }
+.loc-zone.tw { stroke-width: .5; }
+.loc-zone.on { fill: var(--lang); }
+
+.lang-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 40px; align-items: start; padding-top: 40px; }
+.lang-body { display: flex; flex-direction: column; gap: 32px; }
+.lang-section { display: flex; flex-direction: column; gap: 12px; }
+.lang-section + .lang-section { padding-top: 32px; border-top: 1px solid var(--line); }
+.lang-section h2 { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.lang-section p { font-size: 17px; line-height: 1.65; max-width: 62ch; }
+.lang-section .note { font-size: 14px; color: var(--muted); }
+.lang-section .varieties li { font-size: 15px; padding: 8px 14px; }
+.lang-side { position: sticky; top: 24px; }
+.recordings { display: flex; flex-direction: column; gap: 12px; }
+.recordings p { font-size: 15px; line-height: 1.55; }
+.recordings .btn-dark { align-self: flex-start; margin: 4px 0 0; }
+
+.lang-pager { display: flex; justify-content: space-between; gap: 16px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); }
+.pager-link { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 8px 4px; text-decoration: none; color: var(--ink); }
+.pager-link > span { display: flex; flex-direction: column; gap: 2px; }
+.pager-link.next > span { align-items: flex-end; }
+.pager-name { font-family: var(--display); font-weight: 600; font-size: 20px; }
+.pager-link:hover .pager-name { color: var(--accent); }
+
+.lang-index { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.lang-index a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 500; }
+.lang-index a:hover { border-color: #8FA39C; }
+.page-language .lang-wrap > .back-link:first-child { margin-top: 32px; }
+
+@media (max-width: 900px) {
+  .lang-hero-inner, .lang-grid { grid-template-columns: 1fr; }
+  .lang-hero-inner { gap: 24px; padding-block: 24px 32px; }
+  .lang-side { position: static; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .locator-card { transition: none; }
+}
