@@ -72,14 +72,14 @@
         </div>
       </div>
 
-      <div class="tooltip" id="tooltip" role="tooltip" hidden>
-        <span class="tt-name"></span>
-        <span class="tt-zh" lang="zh-Hans"></span>
-        <span class="tt-family"></span>
+      <div class="hover-overlay" id="hover-overlay" aria-hidden="true">
+        <span class="ho-family"></span>
+        <span class="ho-name"></span>
+        <span class="ho-zh" lang="zh-Hans"></span>
       </div>
     </div>
 
-    <!-- Language detail panel. Turned off for now: set FEATURES.detailPanel = true in js/config.js to bring it back. -->
+    <!-- Language detail panel. Slides in when a language is selected (FEATURES.detailPanel in js/config.js). -->
     <aside class="card detail" id="detail" aria-label="Language details" aria-live="polite" hidden></aside>
   </section>
 </main>
