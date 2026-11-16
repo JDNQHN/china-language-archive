@@ -6,6 +6,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 const byId = Object.fromEntries(LANGUAGES.map((l) => [l.id, l]));
 
 const state = { selected: null };
+const HOVER_VARIETIES = 3; // how many varieties the hover overlay lists
 
 // Taiwan inset: which language each layer belongs to.
 const TAIWAN_LAYERS = { hokkien: 'min', hakka: 'hakka', indigenous: 'formosan' };
@@ -157,6 +158,17 @@ function showHover(lang) {
   h.querySelector('.ho-name').textContent = lang.name;
   h.querySelector('.ho-zh').textContent = `${lang.zh} · ${lang.pinyin}`;
   h.querySelector('.ho-family').textContent = lang.family;
+  // A few well-known varieties (e.g. Cantonese, Hokkien, Teochew) so people can find them by name.
+  const vars = h.querySelector('.ho-varieties');
+  const names = [];
+  for (const v of lang.varieties) {
+    const name = v.replace(/\s*\(.*?\)\s*/g, ''); // "Hokkien (Southern Min)" -> "Hokkien"
+    if (names.some((n) => name.includes(n))) continue; // skip "Hong Kong Cantonese" after "Cantonese"
+    names.push(name);
+    if (names.length === HOVER_VARIETIES) break;
+  }
+  vars.replaceChildren(...names.map((n) => el('span', { class: 'ho-variety', text: n })));
+  vars.hidden = !lang.varieties.length;
   h.style.setProperty('--lang', lang.color);
   h.classList.add('show');
 }
