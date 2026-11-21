@@ -6,6 +6,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 const byId = Object.fromEntries(LANGUAGES.map((l) => [l.id, l]));
 
 const state = { selected: null };
+const HOVER_VARIETIES = 3; // how many varieties the hover overlay lists
 
 // Taiwan inset: which language each layer belongs to.
 const TAIWAN_LAYERS = { hokkien: 'min', hakka: 'hakka', indigenous: 'formosan' };
@@ -157,6 +158,17 @@ function showHover(lang) {
   h.querySelector('.ho-name').textContent = lang.name;
   h.querySelector('.ho-zh').textContent = `${lang.zh} · ${lang.pinyin}`;
   h.querySelector('.ho-family').textContent = lang.family;
+  // A few well-known varieties (e.g. Cantonese, Hokkien, Teochew) so people can find them by name.
+  const vars = h.querySelector('.ho-varieties');
+  const names = [];
+  for (const v of lang.varieties) {
+    const name = v.replace(/\s*\(.*?\)\s*/g, ''); // "Hokkien (Southern Min)" -> "Hokkien"
+    if (names.some((n) => name.includes(n))) continue; // skip "Hong Kong Cantonese" after "Cantonese"
+    names.push(name);
+    if (names.length === HOVER_VARIETIES) break;
+  }
+  vars.replaceChildren(...names.map((n) => el('span', { class: 'ho-variety', text: n })));
+  vars.hidden = !lang.varieties.length;
   h.style.setProperty('--lang', lang.color);
   h.classList.add('show');
 }
@@ -164,6 +176,12 @@ function showHover(lang) {
 function hideHover() { els.hover.classList.remove('show'); }
 
 /* ---------- render ---------- */
+
+function arrowIcon() {
+  const s = svgEl('svg', { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' });
+  s.append(svgEl('path', { d: 'M5 12h14M13 6l6 6-6 6' }));
+  return s;
+}
 
 function renderDetail(lang) {
   const d = els.detail;
@@ -183,6 +201,8 @@ function renderDetail(lang) {
         el('span', { class: 'names' }, el('span', { lang: 'zh-Hans', text: lang.zh }), ` · ${lang.pinyin}`)),
       el('button', { class: 'icon-btn bordered', type: 'button', 'aria-label': 'Clear selection', onclick: () => select(lang.id) }, closeIcon)),
     el('p', { class: 'blurb', text: lang.blurb }),
+    el('a', { class: 'btn btn-outline lang-page-btn', href: `language.html?id=${encodeURIComponent(lang.id)}` },
+      `Explore ${lang.name}`, arrowIcon()),
     el('div', { class: 'section' }, el('h3', { text: 'Where it’s spoken' }), el('p', { text: lang.where })),
   );
 
@@ -237,4 +257,7 @@ els.detail.hidden = true;
 buildChips();
 buildLegend();
 buildMap();
+// index.html?lang=<id> opens with that language selected (used by "Back to the map" on language pages).
+const startLang = new URLSearchParams(location.search).get('lang');
+if (startLang && byId[startLang]) state.selected = startLang;
 render();
