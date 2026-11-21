@@ -222,7 +222,7 @@ function renderDetail(lang) {
   d.append(el('div', { class: 'dashed' },
     el('h3', { class: 'label', text: 'Recordings' }),
     el('p', { class: 'muted', style: 'font-size:14px;line-height:1.5', text: `No recordings yet. Speak ${lang.name}? Help start this collection.` }),
-    el('a', { class: 'btn btn-dark', href: '#contribute', text: 'Contribute a recording' })));
+    el('a', { class: 'btn btn-dark', href: `contribute.html?lang=${encodeURIComponent(lang.id)}`, text: 'Contribute a recording' })));
 }
 
 function render() {
