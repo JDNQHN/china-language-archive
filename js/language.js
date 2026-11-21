@@ -118,7 +118,7 @@ function render(lang) {
         el('div', { class: 'card recordings' },
           el('h2', { class: 'label', text: 'Recordings' }),
           el('p', { class: 'muted', text: `No recordings yet. Speak ${lang.name}? Help start this collection.` }),
-          el('a', { class: 'btn btn-dark', href: '#contribute', text: 'Contribute a recording' })))),
+          el('a', { class: 'btn btn-dark', href: `contribute.html?lang=${encodeURIComponent(lang.id)}`, text: 'Contribute a recording' })))),
     el('nav', { class: 'wrap lang-wrap lang-pager', 'aria-label': 'Other languages' },
       el('a', { class: 'pager-link', href: langUrl(prev.id), rel: 'prev' },
         arrow('left'), el('span', {}, el('span', { class: 'label', text: 'Previous' }), el('span', { class: 'pager-name', text: prev.name }))),

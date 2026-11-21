@@ -21,8 +21,13 @@ Any static host (GitHub Pages, Netlify, etc.) will serve it as is.
 index.html          Page structure
 css/styles.css      All styling
 js/app.js           Map, languages menu, tooltip, detail panel, Taiwan inset
-js/config.js        Feature switches (e.g. turn the language detail panel on/off)
+js/config.js        Feature switches, and the Supabase project to connect to
 data/languages.js   Language info: names, family, description, varieties, colour, Taiwan notes
+contribute.html     "Record a word" page for speakers (js/contribute.js, css/contribute.css)
+js/backend.js       Everything sent to or read from Supabase (or the demo stand-in)
+js/vendor/          supabase-js, kept here instead of a CDN (some CDNs are blocked in mainland China)
+data/prompts.js     The words and phrases speakers are asked to record
+supabase/schema.sql Database tables, row-level rules and audio storage for Supabase
 data/map.js         Map geometry (generated — see below)
 tools/              Script and data used to regenerate data/map.js
 ```
@@ -49,6 +54,35 @@ npm install --prefix tools     # downloads cn-atlas and taiwan-atlas
 pip install shapely
 python3 tools/build_map.py     # rewrites data/map.js
 ```
+
+## Recordings
+
+Speakers record everyday words on `contribute.html` (linked from every “Contribute a recording” button; `contribute.html?lang=<id>` preselects a language). The page is phone-first and bilingual (English / Chinese):
+
+1. **About you** — language, what they call their dialect, hometown, age group (only the language is required).
+2. **Agreement** — recordings are public after review, shared under CC BY-SA 4.0.
+3. **Sign in** — a 6-digit code by email. No passwords, and no Google sign-in (blocked in mainland China).
+4. **Record** — one prompt at a time from `data/prompts.js`: record, listen back, optionally write it down, send. Every recording waits for a moderator.
+
+Without a Supabase project the page runs in **demo mode**: everything works, but nothing leaves the browser.
+
+### Connecting Supabase
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. **SQL Editor** → paste all of `supabase/schema.sql` → **Run**. This creates the tables, the row-level rules and a private `recordings` storage bucket. It’s safe to run again after changes.
+3. **Authentication → Sign In / Providers → Email**: keep Email enabled. Then **Authentication → Emails → Magic Link** template: make sure it contains `{{ .Token }}` so the email shows the 6-digit code, e.g. `<p>Your code: <strong>{{ .Token }}</strong></p>`.
+4. **Authentication → URL Configuration**: set the Site URL to where the site is hosted.
+5. **Project Settings → API**: copy the Project URL and the `anon` public key into `BACKEND` in `js/config.js`. The anon key is meant to be public; the row-level rules decide what each visitor can do.
+6. Make a linguist a moderator (after they’ve signed in once), in the SQL Editor:
+   ```sql
+   update public.profiles set role = 'moderator'
+   where id = (select id from auth.users where email = 'linguist@example.com');
+   ```
+   Until the review page exists, moderators can approve recordings in **Table Editor → recordings** by setting `status` to `approved`.
+
+Supabase’s built-in email sender is rate-limited and meant for testing; set up custom SMTP (Authentication → Emails) before inviting people.
+
+**What the rules allow:** anyone can hear approved recordings; speakers can add recordings only as `pending`, see their own, fix their own words while pending, and delete their own pending ones; only moderators can approve or reject. Every change to a recording is copied into `revisions` (who, when, before, after).
 
 ## Accuracy
 
